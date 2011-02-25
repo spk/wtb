@@ -180,7 +180,7 @@ main(int argc, char **argv)
 	if (list) {
 		/* command line options */
 		static int c;
-		static const char opts[] = "itavh";
+		static const char opts[] = "tvh";
 		static struct option lopts[] = {
 			{"title", no_argument, 0, 't'},
 			{"version", no_argument, 0, 'v'},
