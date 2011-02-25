@@ -1,0 +1,27 @@
+wtb(1)
+=======
+
+NAME
+----
+wtb - print id or title of currently open bug
+
+SYNOPSIS
+--------
+*wtb* [*-t* | *--title*] [*-v* | *--version*] [*-h* | *--help*]
+
+DESCRIPTION
+-----------
+what the bug - print id or title of currently open bug on your X
+
+OPTIONS
+-------
+*-t*, *--title*::
+    Show bug title.
+*-v*, *--version*::
+    Show version.
+*-h*, *--help*::
+    Show help message.
+
+AUTHORS
+-------
+Laurent Arnoud <laurent@spkdev.net>.
