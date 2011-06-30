@@ -41,6 +41,8 @@ static char *bts[] = {
 	"^FS#([[:digit:]]+) : (.*) - ",
 	/* PHP Bug Tracking System */
 	"^PHP :: \\w+ #([[:digit:]]+) :: (.*) - ",
+	/* Github Issues */
+	"^#([[:digit:]]+): (.*) - Issues",
 };
 
 struct bug {
