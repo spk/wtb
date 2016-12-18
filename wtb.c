@@ -4,7 +4,7 @@
  *
  * See LICENSE file for copyright and license details.
  *
- * wtb - print id or title of currently open bug
+ * wtb - print currently open bug ID
  */
 
 #include <stdio.h>
@@ -25,38 +25,62 @@
 
 /* globals */
 static char *bts[] = {
-    /* Trac #bugid (title) */
-    "^#([[:digit:]]+) \\((.*)\\)",
-    /* Redmine project - Bug #bugid: title */
-    "^.* - \\w+ #([[:digit:]]+): (.*) - ",
-    /* Debian BTS #bugid - title */
-    "^#([[:digit:]]+) - (.*) -",
-    /* MantisBT bugid: title */
+    /*
+     * Trac #bugid (title)
+     * https://trac.edgewall.org/ticket/8813
+     */
+    "^#([[:digit:]]+) \\(",
+    /*
+     * Redmine project - Bug #bugid: title
+     * https://www.redmine.org/issues/24641
+     */
+    ".* #([[:digit:]]+):",
+    /*
+     * Debian BTS #bugid - title
+     * https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=845558
+     */
+    "^#([[:digit:]]+) -",
+    /*
+     * MantisBT bugid: title
+     * https://www.mantisbt.org/bugs/view.php?id=22049
+     */
     "^([[:digit:]]+): (.*) -",
-    /* Bugzilla Bug bugid – title ! use PCRE ? */
-    "^Bug ([[:digit:]]+) (.*) -",
-    /* Jira [#CODE-bugid] title */
-    "^\\[#[[:alnum:]]+-([[:digit:]]+)\\] (.*) - ",
-    /* Flyspray FS#bugid : title */
-    "^FS#([[:digit:]]+) : (.*) - ",
-    /* PHP Bug Tracking System */
-    "^PHP :: \\w+ #([[:digit:]]+) :: (.*) - ",
+    /*
+     * Bugzilla Bug bugid – title ! use PCRE ?
+     * https://bugzilla.mozilla.org/show_bug.cgi?id=1143712
+     */
+    "^([[:digit:]]+) ",
+    /*
+     * Jira [#CODE-bugid] title
+     * https://jira.mongodb.org/browse/DOCS-1515
+     */
+    "^\\[.*-([[:digit:]]+)\\] ",
+    /*
+     * Flyspray FS#bugid : title
+     * https://bugs.flyspray.org/index.php?do=details&task_id=2319
+     */
+    "^FS#([[:digit:]]+) : ",
+    /*
+     * PHP Bug Tracking System
+     * https://bugs.php.net/bug.php?id=73734
+     */
+    "^PHP :: .* #([[:digit:]]+) :: ",
     /* Github Issues */
-    "^#([[:digit:]]+): (.*) - Issues",
+    ".* ? .* #([[:digit:]]+) ? ",
+    /* GitLab Issues */
+    ".* \\(#([[:digit:]]+)\\)",
 };
 
 struct bug {
     char *bugid;
-    char *title;
 };
 
 static const char usage[] =
-APP " " VERSION " - print id or title of currently open bug\n"
+APP " " VERSION " - print currently open bug ID\n"
 "\n"
 "Usage: " APP "      [options]\n"
 "\n"
 "Options:\n"
-"  -t, --title                 Show bug title.\n"
 "  -v, --version               Show version.\n"
 "  -h, --help                  Show help message.";
 
@@ -113,15 +137,6 @@ parse_bug(const char *str, char *pattern)
             strncpy(b->bugid, &str[start_bugid], size_bugid);
             b->bugid[size_bugid] = '\0';
         }
-
-        int start_title = r[2].rm_so;
-        int end_title = r[2].rm_eo;
-        size_t size_title = end_title - start_title;
-        b->title = malloc(sizeof(*b->title) * (size_title + 1));
-        if (b->title) {
-            strncpy(b->title, &str[start_title], size_title);
-            b->title[size_title] = '\0';
-        }
     } else {
         b = NULL;
     }
@@ -138,23 +153,18 @@ free_bug(struct bug *b)
     if (b) {
         if (b->bugid)
             free(b->bugid);
-        if (b->title)
-            free(b->title);
         free(b);
     }
 }
 
     void
-get_bugid(const char *string, bool title)
+get_bugid(const char *string)
 {
     int i;
     for (i = 0; i < ARRAY_SIZE(bts); i++) {
         if (match(string, bts[i]) != 0) {
             struct bug *b = parse_bug(string, bts[i]);
-            if (title)
-                printf("%s\n", b->title);
-            else
-                printf("%s\n", b->bugid);
+            printf("%s\n", b->bugid);
 
             free_bug(b);
             return;
@@ -184,18 +194,13 @@ main(int argc, char **argv)
         static int c;
         static const char opts[] = "tvh";
         static struct option lopts[] = {
-            {"title", no_argument, 0, 't'},
             {"version", no_argument, 0, 'v'},
             {"help", no_argument, 0, 'h'},
             {0, 0, 0, 0}
         };
-        static bool title;
         int idx = 0;
         while ((c = getopt_long(argc, argv, opts, lopts, &idx)) != -1) {
             switch (c) {
-                case 't':
-                    title = true;
-                    break;
                 case 'v':
                     printf("%s %s\n", APP, VERSION);
                     exit(EXIT_SUCCESS);
@@ -213,7 +218,7 @@ main(int argc, char **argv)
         /* check clients WM_NAME */
         for (i = 0; i < len; i++) {
             if (XGetWMName(disp, list[i], &tp) != 0) {
-                get_bugid((const char *)tp.value, title);
+                get_bugid((const char *)tp.value);
                 XFree(tp.value);
             }
         }
