@@ -1,6 +1,6 @@
 /* MIT/X Consortium License
  *
- * © 2011 Laurent Arnoud <laurent@spkdev.net>
+ * © 2011-2016 Laurent Arnoud <laurent@spkdev.net>
  *
  * See LICENSE file for copyright and license details.
  *

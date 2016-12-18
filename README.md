@@ -1,33 +1,35 @@
-wtb - print id or title of currently open bug
-=============================================
+# wtb - print currently open bug ID
 
-DESCRIPTION
------------
+## DESCRIPTION
+
 what the bug - print id or title of currently open bug on your X
 
-REQUIREMENTS
-------------
+## REQUIREMENTS
+
 * gcc
 * make
 * Xlib header files
 
-INSTALLATION
-------------
+## INSTALLATION
+
 Installed by default into /usr/local (change PREFIX for custom prefix)
 
     PREFIX=/usr make install
 
-USING
------
-    git branch bug`wtb`
-    git commit -m "Fix `wtb -t`. Closes #`wtb`"
+## USING
 
-WHY?
-----
+```
+    git branch fix-bug-$(wtb)
+    git commit -m "Fix ... Closes #$(wtb)"
+```
+
+## WHY?
+
 This is Perl to C translation of:
 http://people.gnome.org/~tthurman/metacity/bugid.txt
 
-Adding support for other bts:
+Adding support for other BTS:
+
 * Trac
 * Redmine
 * Debian BTS
@@ -37,7 +39,10 @@ Adding support for other bts:
 * Flyspray
 * PHP Bug Tracking System
 * Github Issues
+* GitLab Issues
 
-AUTHOR
-------
-© 2011 Laurent Arnoud <laurent@spkdev.net>
+## LICENSE
+
+MIT/X Consortium License
+
+© 2011-2016 Laurent Arnoud <laurent@spkdev.net>
