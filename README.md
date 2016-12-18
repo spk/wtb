@@ -2,7 +2,7 @@
 
 ## DESCRIPTION
 
-what the bug - print id or title of currently open bug on your X
+what the bug - print currently open bug ID on your X
 
 ## REQUIREMENTS
 

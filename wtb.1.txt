@@ -3,20 +3,18 @@ wtb(1)
 
 NAME
 ----
-wtb - print id or title of currently open bug
+wtb - print currently open bug ID
 
 SYNOPSIS
 --------
-*wtb* [*-t* | *--title*] [*-v* | *--version*] [*-h* | *--help*]
+*wtb* [*-v* | *--version*] [*-h* | *--help*]
 
 DESCRIPTION
 -----------
-what the bug - print id or title of currently open bug on your X
+what the bug - print currently open bug ID on your X
 
 OPTIONS
 -------
-*-t*, *--title*::
-    Show bug title.
 *-v*, *--version*::
     Show version.
 *-h*, *--help*::
